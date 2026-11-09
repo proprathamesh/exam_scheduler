@@ -27,3 +27,11 @@ def test_unknown_endpoint():
     response = client.get("/api/v1/unknown")
 
     assert response.status_code == 404
+
+def test_auth_routes_registered():
+    from app.main import app
+
+    paths = app.openapi()["paths"]
+
+    assert "post" in paths["/api/v1/auth/login"]
+    assert "get" in paths["/api/v1/auth/me"]

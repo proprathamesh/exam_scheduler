@@ -1,12 +1,16 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.auth import router as auth_router
+from app.api.role_demo import router as role_demo_router
 
 app = FastAPI(
     title="University Examination Management API",
     description="Backend for examination scheduling, allocation and attendance.",
     version="0.1.0",
 )
+app.include_router(auth_router)
+app.include_router(role_demo_router)
 
 app.add_middleware(
     CORSMiddleware,
