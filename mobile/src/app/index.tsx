@@ -12,6 +12,9 @@ import {
   View,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import AdminDashboard from "../components/dashboards/AdminDashboard";
+import FacultyDashboard from "../components/dashboards/FacultyDashboard";
+import StudentDashboard from "../components/dashboards/StudentDashboard";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const TOKEN_KEY = "access_token";
@@ -220,27 +223,45 @@ export default function LoginScreen() {
     );
   }
 
-  if (status === "signedIn" && user) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.title}>Session Active</Text>
-          <Text style={styles.description}>
-            Welcome, {user.email}
-          </Text>
-          <Text style={styles.role}>
-            Role: {user.role.toUpperCase()}
-          </Text>
-          <Pressable
-            style={styles.button}
-            onPress={() => void handleLogout()}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
+  
+if (status === "signedIn" && user) {
+  switch (user.role) {
+    case "admin":
+      return (
+        <AdminDashboard
+          user={user}
+          onLogout={handleLogout}
+        />
+      );
+
+    case "faculty":
+      return (
+        <FacultyDashboard
+          user={user}
+          onLogout={handleLogout}
+        />
+      );
+
+    case "student":
+      return (
+        <StudentDashboard
+          user={user}
+          onLogout={handleLogout}
+        />
+      );
+
+    default:
+      return (
+        <SafeAreaView style={styles.container}>
+          <Text>Unknown account role.</Text>
+          <Pressable onPress={() => void handleLogout()}>
+            <Text>Logout</Text>
           </Pressable>
-        </View>
-      </SafeAreaView>
-    );
+        </SafeAreaView>
+      );
   }
+}
+
 
   return (
     <SafeAreaView style={styles.container}>
